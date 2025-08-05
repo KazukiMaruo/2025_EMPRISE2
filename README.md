@@ -1,9 +1,9 @@
-# MINT
+# EMPRISE2
 
 ## Overview
 
-This repository includes all used for MINT project.
-- **NOTE:** This project has been already terminated after six adults data collection
+This repository includes all used for EMPRISE2 project.
+- **NOTE:** This project has been already terminated after data collection of ten healthy adults and five adults with dyscalculia
 
 ## Table of Contents
 
@@ -16,13 +16,14 @@ This repository includes all used for MINT project.
 ## Objective
 
 The objective of this project was to:
-- Explore electrophysiological representation (= EEG) of numerosity in infants.
+- Explore numerosity maps in dyscalculia.
 
 Methods:
-- 6 adults
-- EEG
+- 10 adults
+- 5 dyscalculia
+- fMRI
 - Psychopy
-- Multivariate decoding
+- Modeling approach
 
 Figures:
 ![Stimuli](images/exp_figure.jpg)
@@ -31,31 +32,26 @@ Figures:
 
 This section outlines the general pipeline.
 
-### 1. Conduct the experiment. 
-Detailed steps for implementing the experiment are described in the following folder
-```bash
-cd MINT/experiment
-```
-
-### 2. Analyze the EEG data
+### 1. Analyze the preprocessed fMRI data
 Detailed steps for the data analysis are described in the following folder
 ```bash
-cd MINT/code
+EMPRISE2/code
 ```
 
 ## Directory Structure
 ```bash
-MINT/
-    ├── code/   # contains scripts for data analysis
+EMPRISE2/
+    ├── behav/   # task response .csv files
     │
-    ├── env/   # includes all the packages used in the conda enviironment 
+    ├── code/   # scripts for data analysis 
     │
     ├── experiment/ # psychopy scripts and stimuli
     │
-    ├── images/ # includes figures
+    ├── figures/ # figures
+    │
+    ├── matlab/spm # matlab-based functions 
     ├── .gitignore # ignore some folders not to upload to GitHub.
     ├── README.md
-    ├── debugging_tips.txt # My debugging notes.
 ```
 
 ## Contact
