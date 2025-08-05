@@ -1,0 +1,11 @@
+{
+    "DATA_DIR":          "/data/pt_02495/emprise7t_2/",
+    "PROJECT_DIR":       "/data/u_kazuki_software/EMPRISE_2/",
+    "DATA_ANALYSIS_DIR": "/data/pt_02495/emprise7t_2_analysis/",
+    "SUBJECT":           "N012",
+    "SESSION":           "visual",
+    "SPACE":             "fsaverage",
+    "MODEL":             "NumAna",
+    "CV":                false
+    
+}
