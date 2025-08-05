@@ -87,7 +87,7 @@ for Group in Groups:
 
 
                 # extract the mu values in the ROI
-                mu_ROI = mu[ROI_label]
+                mu_ROI   = mu[ROI_label]
 
                 # Get data for histogram
                 max_num  = 5
@@ -108,7 +108,7 @@ from scipy.stats import mannwhitneyu
 con_subj = ["N001", "N004", "N005","N006", "N007","N008","N011", "N012"]
 dys_subj = ["D001", "D002", "D003","D004", "D005"]
 
-ROI = 'NPC'
+ROI  = 'NPC'
 hemi = 'R'
 
 # Example: get your data from storage (fill in your actual source)

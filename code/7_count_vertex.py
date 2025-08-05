@@ -83,12 +83,12 @@ for ROI in ROIs:
 
 
             # extract the mu values in the ROI
-            mu_ROI = mu[ROI_label]
+            mu_ROI   = mu[ROI_label]
 
             # Get data for histogram
             max_num  = 5
             bin_size = 0.5
-            bins = np.arange(1, max_num + bin_size, bin_size)
+            bins     = np.arange(1, max_num + bin_size, bin_size)
 
             counts, bin_edges = np.histogram(mu_ROI, bins=bins) # mu count
             counts_by_subject[subject][hemi] = counts
@@ -99,17 +99,17 @@ for ROI in ROIs:
     #-------------------------------------------------------------------------#
     # Extract values
     # Convert each hemisphere's histogram to a list of arrays
-    left_all = np.array([counts_by_subject[subj]['L'] for subj in subjects])
+    left_all  = np.array([counts_by_subject[subj]['L'] for subj in subjects])
     right_all = np.array([counts_by_subject[subj]['R'] for subj in subjects])
 
     # Compute mean across subjects
-    left_mean = np.mean(left_all, axis=0)
+    left_mean  = np.mean(left_all, axis=0)
     right_mean = np.mean(right_all, axis=0)
 
     # Compute sem
     n_subjects = len(subjects)
-    left_sem = np.std(left_all, axis=0, ddof=1) / np.sqrt(n_subjects)
-    right_sem = np.std(right_all, axis=0, ddof=1) / np.sqrt(n_subjects)
+    left_sem   = np.std(left_all, axis=0, ddof=1) / np.sqrt(n_subjects)
+    right_sem  = np.std(right_all, axis=0, ddof=1) / np.sqrt(n_subjects)
 
     # Plot
     bin_centers = (bins[:-1] + bins[1:]) / 2
@@ -137,7 +137,7 @@ for ROI in ROIs:
         df_hemi = df[df['hemisphere'] == hemi]
         
         # Fit LMM with random intercept per subject
-        model = smf.mixedlm("value ~ bin_center", df_hemi, groups=df_hemi["subject"])
+        model  = smf.mixedlm("value ~ bin_center", df_hemi, groups=df_hemi["subject"])
         result = model.fit()
         
         pvals.append(result.pvalues['bin_center'])
@@ -145,22 +145,22 @@ for ROI in ROIs:
 
 
     # correlation coefficients
-    r_left, p_left = pearsonr(bin_centers, left_mean)
+    r_left, p_left   = pearsonr(bin_centers, left_mean)
     r_right, p_right = pearsonr(bin_centers, right_mean)
 
     # Fit linear (degree=1) and quadratic (degree=2) models for each hemisphere
-    left_lin_fit = np.polyfit(bin_centers, left_mean, 1)
+    left_lin_fit  = np.polyfit(bin_centers, left_mean, 1)
     left_quad_fit = np.polyfit(bin_centers, left_mean, 2)
 
-    right_lin_fit = np.polyfit(bin_centers, right_mean, 1)
+    right_lin_fit  = np.polyfit(bin_centers, right_mean, 1)
     right_quad_fit = np.polyfit(bin_centers, right_mean, 2)
 
     # Generate smooth predictions
-    x_fit = np.linspace(bin_centers[0], bin_centers[-1], 200)
-    left_lin_pred = np.polyval(left_lin_fit, x_fit)
+    x_fit          = np.linspace(bin_centers[0], bin_centers[-1], 200)
+    left_lin_pred  = np.polyval(left_lin_fit, x_fit)
     left_quad_pred = np.polyval(left_quad_fit, x_fit)
 
-    right_lin_pred = np.polyval(right_lin_fit, x_fit)
+    right_lin_pred  = np.polyval(right_lin_fit, x_fit)
     right_quad_pred = np.polyval(right_quad_fit, x_fit)
 
 
