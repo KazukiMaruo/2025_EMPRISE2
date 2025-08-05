@@ -26,7 +26,7 @@ Methods:
 - Modeling approach
 
 Figures:
-![Stimuli](images/exp_figure.jpg)
+![Stimuli](figures/exp_figure.jpg)
 
 ## Steps for Reproducibility
 
