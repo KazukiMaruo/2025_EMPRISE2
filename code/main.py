@@ -10,8 +10,6 @@ Modify here only for your analysis
 condition: digit, spoken, visual, audio1, audio2
 code_dir: specify the directory containing "config.json" file.
 """
-# subject_lists = ["N001", "N003", "N004", "N005","N006", "N007","N008", "N009","N011", "N012"]
-# for subject in subject_lists:
 subject  = "D005"
 session  = "visual"
 model    = "NumAna" # model name # if you want a spatial smoothing, put 'FWHM' and '3' for the value
