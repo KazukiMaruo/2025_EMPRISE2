@@ -7,10 +7,8 @@ This repository includes scripts for data analysis and outlines the steps. The g
 ## Table of Contents
 
 1. [Objective](#objective)
-2. [EEG preprocessing](#EEG-preprocessing)
-3. [Single level analysis](#Single-level-analysis)
-4. [Group level analysis](#Group-level-analysis)
-5. [Directory Structure](#directory-structure)
+2. [Analysis](#analysis)
+3. [Directory Structure](#directory-structure)
 6. [Contact](#contact)
 
 
@@ -19,71 +17,58 @@ This repository includes scripts for data analysis and outlines the steps. The g
 The objective is to explore numerosity response in dyscalculia using:
 - Modeling:   Numerosity population receptive field models (numerosity pRF model).
 - ROIs:       Spatial clustering (AFNI tools).
-- Statistics: A linear mixed-effects model.
+- Statistics: A linear mixed-effects model and Mann-Whitney U-Test.
 
 
-## EEG preprocessing
+## Analysis
 
-### 1. Download the code folder. 
-1. Open https://download-directory.github.io/
-2. Paste the URL of 'code' folder
-3. Place it in the 'MINT' folder
-
-### 2. Run preprocessing
-
-1. go to 'pre-process' folder
-2. Run 'preprocess.py'
- ```bash
-python preprocess.py
+### 1. numerosity pRF model. 
+1. Open 'main.py'
+2. Change the parameters
+```bash
+# Parameters
+#-------------------------------------------------------------------------#
+"""
+Modify here only for your analysis
+condition: digit, spoken, visual, audio1, audio2
+code_dir: specify the directory containing "config.json" file.
+"""
+subject  = "D005"
+session  = "visual"
+model    = "NumAna" # model name # if you want a spatial smoothing, put 'FWHM' and '3' for the value
+space    = "fsaverage" # "fsnative" or "T1w"
+target   = "all" # "all" or "split"
+code_dir = "/data/u_kazuki_software/EMPRISE_2/code/"
  ```
 
-
-## Single level analysis
-### 1. Decoding: Time-resolved logistic regression.
-1. go to '1st-level' folder
-2. run '1_logistic_multisessions.py'
+3. Run 'main.py' via 'sub.sh' as a Slurm job
  ```bash
-python 1_logistic_multisessions.py
+sbatch sub.sh
+ ```
+4. Computation takes 2 days with HPC clusters in the MPI-CBS
+
+
+### 2. ROIs
+1. Open '6_ROIs'
+2. Change the parameters
+ ```bash
+# Parameters
+#-------------------------------------------------------------------------#
+count_thr     = 3 # number of participants overlapping in the surface-based for the next spatial clustering
+hemis         = ['L', 'R']
+subject_lists = ["N001", "N004", "N005","N006", "N007","N008","N011", "N012"]
+surf_imgs     = {}
+ ```
+3. Run '6_ROIs'
+ ```bash
+python 6_ROIs.py
  ```
 
-### 2. Decoding: EEGNetV4 (=Convolutional Neural Network).
-1. go to '1st-level' folder
-2. run '2_eegnet_global.py'
- ```bash
-python 2_eegnet_global.py
- ```
+### 3. Statistics
+1. Open and run '7_count_vertex.py' for the linear-mixed effects model
+2. '7_count_vertex.py' also generates the figures (2025_EMPRISE2/figures/Sub-all)
+3. Open and run '8_nonpara_test.py' for the Mann-Whitney U-Test
 
-### 3. Visualize the decoding results
-1. go to '1st-level' folder
-2. run '3_logistic_visualization.ipynb' or '3_eegnet_visualization.ipynb'
-
-
-### 3. Generate representational dissimilarity matrix.
-1. go to '1st-level' folder
-2. run '4_rdm_generator.py'
- ```bash
-python 4_rdm_generator.py
- ```
-- **NOTE:** 'param.json' in [stimuli folder](../experiment/stimuli/visual) is necessary.
-3. output 4 different dissimilarity matrixes by .png and .npy, and the color bar in [RDM folder](./1st-level/RDM), larger value indicates more dissimilar
--  'rdm_area_of_a_single_dot' represents dissimilarity based on the area of a single dot in an image.
--  'rdm_area_of_total_dots' represents dissimilarity based on the area of total dots in an image.
--  'rdm_circumference_of_total_dots' represents dissimilarity based on the circumference of total dots in an image.
--  'rdm_numerosity' represents dissimilarity based on the number of dot in an image.
-
-4. run '4_rdm_generator_spatialfrequency.py' 
- ```bash
-python 4_rdm_generator_spatialfrequency.py
- ```
-- **NOTE:** more than 10 hours will be needed until completed
-5. output 1 dissimilarity matrix by .png and .npy in [RDM folder](./1st-level/RDM)
--  'rdm_spatial_frequency_raw' represents matrix without cleaning up
--  'rdm_spatial_frequency' represents dissimilarity matrix based on the spatial frequency in an image.
-
-
-## Group level analysis
-1. go to '2nd-level' folder
-2. run '1_logistic.ipynb' or '2_eegnet.ipynb'
 
 
 ## Directory Structure
