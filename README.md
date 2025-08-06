@@ -25,7 +25,7 @@ Methods:
 - Psychopy
 - Modeling approach
 
-Figures:
+Figure:
 ![Stimuli](figures/exp_figure.jpg)
 
 ## Steps for Reproducibility
@@ -36,10 +36,10 @@ This section outlines the general pipeline.
 Detailed steps for the data analysis are described in the following folder
 - [analysis pipeline](code/README.md)
 
-Figures:
+Figure:
 ![Pipeline](figures/ana_figure.jpg)
 
-Figures:
+Figure:
 ![Results](figures/res_figure.jpg)
 
 ## Directory Structure
