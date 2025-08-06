@@ -34,7 +34,7 @@ This section outlines the general pipeline.
 
 ### 1. Analyze the preprocessed fMRI data
 Detailed steps for the data analysis are described in the following folder
-[analysis pipeline](code/README.md)
+- [analysis pipeline](code/README.md)
 
 ## Directory Structure
 ```bash
