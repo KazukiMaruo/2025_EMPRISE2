@@ -75,16 +75,21 @@ python 6_ROIs.py
 The code folder should be configured like this:
 ```bash
 experiment/
-    ├── 1st-level/   # single level analysis
+    ├── Shell/   # AFNI spatial clustering functions
     │
-    ├── 2nd-level/   # group level analysis 
+    ├── 1_fd-dvars_dist.py   # scripts 
+    ├── ... 
+    ├── 8_nonpara_test.py   
     │
-    ├── Preprocess/   # EEG preprocessing
-    │
-    ├── config.json   # general info for analysis
-    ├── MINT.code-workspace   # setting up VScode interface
-    ├── README.md   # overview of the directory
-    └── utils.py  # function lists
+    ├── EMPRISE.py   # functions for the projects
+    ├── Figures.py   # functions for the figures
+    ├── NumpRF.py   # functions for numerosity pRF model
+    ├── PySPMs.py   # functions from SPMs
+    ├── README.md
+    ├── config.json  # specify the parameters
+    ├── main.py  # main script for running
+    ├── main_figure.py  # main script for generating figures
+    └── sub.sh  # bash script for slurm job in HPC cluster
 ```
 
 
