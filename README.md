@@ -36,6 +36,12 @@ This section outlines the general pipeline.
 Detailed steps for the data analysis are described in the following folder
 - [analysis pipeline](code/README.md)
 
+Figures:
+![Pipeline](figures/ana_figure.jpg)
+
+Figures:
+![Results](figures/res_figure.jpg)
+
 ## Directory Structure
 ```bash
 EMPRISE2/
