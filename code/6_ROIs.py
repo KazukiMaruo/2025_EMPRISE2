@@ -18,21 +18,15 @@ from matplotlib.colors import ListedColormap
 
 # Parameters
 #-------------------------------------------------------------------------#
-"""
-Modify here only for your analysis
-condition: digit, spoken, visual, audio1, audio2
-code_dir: specify the directory containing "config.json" file.
-"""
-count_thr = 3 # number of particiapnts
-hemis = ['L', 'R']
+count_thr     = 3 # number of particiapnts
+hemis         = ['L', 'R']
 subject_lists = ["N001", "N004", "N005","N006", "N007","N008","N011", "N012"]
-surf_imgs = {}
+surf_imgs     = {}
 
 for hemi in hemis:
 
     subject_arrays = []
     for subject in subject_lists:
-    # subject  = "N001"
         session  = "visual"
         model    = "NumAna" # model name # if you want a spatial smoothing, put 'FWHM' and '3' for the value
         space    = "fsaverage" # "fsnative" or "T1w"
@@ -42,13 +36,10 @@ for hemi in hemis:
         # start Session class
         #-------------------------------------------------------------------------#
         sess = EMPRISE.Session(subject, session)
-        # print(sess.get_bold_gii(1, space=space)) # example usage
 
         # start Model class
         #-------------------------------------------------------------------------#
         mod = EMPRISE.Model(subject, session, model, space_id=space)
-        # print(mod.get_model_dir()) # example usage
-
 
         # load the surface mask of cluster
         #-------------------------------------------------------------------------#
@@ -63,7 +54,7 @@ for hemi in hemis:
         filepath = res_file[:res_file.find('numprf.mat')] 
         Rsq_cls  = filepath + Rsq_str + '_thr-' + crit + '_cls-' + 'SurfClust' + '_cls' + '.surf.gii'
         if os.path.isfile(Rsq_cls):
-            clst = nib.load(Rsq_cls).darrays[0].data
+            clst      = nib.load(Rsq_cls).darrays[0].data
             clst_mask = np.where(clst>0, 1, 0)
         else:
             print(f"file not found: {Rsq_cls}, skipping.")
@@ -85,17 +76,17 @@ output_dir = f'/data/pt_02495/emprise7t_2_analysis/derivatives/numprf/sub-all/se
 os.makedirs(output_dir, exist_ok=True)  # Ensure the directory exists
 
 for hemi in ['L', 'R']:
-    counts = surf_imgs[hemi].astype(np.float32)
-    gii_img = GiftiImage(darrays=[GiftiDataArray(data=counts)])
+    counts      = surf_imgs[hemi].astype(np.float32)
+    gii_img     = GiftiImage(darrays=[GiftiDataArray(data=counts)])
     output_path = os.path.join(output_dir, f"group_cluster_counts_{hemi}.gii")
     nib.save(gii_img, output_path)
 
 # save the thresholded counts as .gii file
 #-------------------------------------------------------------------------#
 for hemi in ['L', 'R']:
-    counts = surf_imgs[hemi].astype(np.float32)
-    counts_thr = np.where(counts >= count_thr, 1, 0)
-    gii_img = GiftiImage(darrays=[GiftiDataArray(data=counts_thr.astype(np.int32))])
+    counts      = surf_imgs[hemi].astype(np.float32)
+    counts_thr  = np.where(counts >= count_thr, 1, 0)
+    gii_img     = GiftiImage(darrays=[GiftiDataArray(data=counts_thr.astype(np.int32))])
     output_path = os.path.join(output_dir, f"group_cluster_counts_{hemi}_thr-{count_thr}.gii")
     nib.save(gii_img, output_path)
 
@@ -124,8 +115,8 @@ for hemi in hemis:
         label_nodes = np.where(data == cluster_id)[0]
 
         # Dummy coordinate + value data for FreeSurfer .label format
-        coords = np.zeros((len(label_nodes), 4))
-        coords[:, 0] = label_nodes
+        coords         = np.zeros((len(label_nodes), 4))
+        coords[:, 0]   = label_nodes
         coords[:, 1:4] = 1.0  # Dummy xyz values (not used)
 
         # Write .label file
@@ -171,10 +162,10 @@ plot.add_layer(surf_imgs, color_range=(caxis[0],caxis[1]),
                 cmap=cmap, cbar_label=clabel)
 
 # display surface plot
-cbar   = {'n_ticks': 8, 'decimals': 0, 'fontsize': 24}
-fig = plot.build(colorbar=True, cbar_kws=cbar)
-fig.tight_layout()
 filepath = '/data/pt_02495/emprise7t_2_analysis/Figures/visual/NumAna/'
+cbar     = {'n_ticks': 8, 'decimals': 0, 'fontsize': 24}
+fig      = plot.build(colorbar=True, cbar_kws=cbar)
+fig.tight_layout()
 fig.savefig(filepath+'Clustered-Countmap_'+'ses-'+session+'_'+space+'.png', dpi=300, transparent=True)
 print('\n\n-> Successful!')
 
@@ -212,181 +203,10 @@ ROIs = {
 plot.add_layer(ROIs,cmap=green_cmap, color_range=(0, 1), cbar=False)
 
 # display surface plot
-fig = plot.build()
-fig.tight_layout()
 filepath = '/data/pt_02495/emprise7t_2_analysis/Figures/visual/NumAna/'
+fig      = plot.build()
+fig.tight_layout()
 fig.savefig(filepath+'ROIs_'+view+'_ses-'+session+'_'+space+'.png', dpi=300, transparent=True)
 print('\n\n-> Successful!')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#-------------------------------------------------------------------------#
-#-------------------------------------------------------------------------#
-#-------------------------------------------------------------------------#
-
-for hemi in hemis:
-
-    # load annotation
-    path     =  f'/data/pt_02495/emprise7t_2/derivatives/freesurfer/sub-{subject}/label/'
-    filename = f'{hemi.lower()}h.aparc.annot'
-    fullpath = os.path.join(path,filename) 
-    labels, ctab, region_names = fsio.read_annot(fullpath)
-
-    # Define parietal region names (from Desikan-Killiany atlas)
-    parietal_regions = [
-        b'superiorparietal',
-        b'inferiorparietal',
-        b'postcentral',
-        b'precuneus',
-        b'supramarginal'
-    ]
-
-    # Get indices in the color table
-    parietal_ids = [i for i, name in enumerate(region_names) if name in parietal_regions]
-    # Create a boolean mask for vertices in any of those regions
-    parietal_mask = np.isin(labels, parietal_ids)
-
-    # Get thresholded mu values
-    res_file = mod.get_results_file(hemi)
-    filepath = res_file[:res_file.find('numprf.mat')]
-    mu_map   = filepath + 'mu_thr-Rsqmb,p=0.05B.surf.gii'
-    if os.path.exists(res_file) and os.path.exists(mu_map):
-        NpRF    = sp.io.loadmat(res_file)
-        image   = nib.load(mu_map)
-        mu      = image.darrays[0].data
-        mask    = ~np.isnan(image.darrays[0].data)
-    else:
-        print(f'file {filepath} does not exsist.')
-
-
-    # extract the mu values in the parietal cortex
-    combined_mask = parietal_mask & mask
-    mu_parietal = mu[combined_mask]
-
-
-
-    # histogram visualization
-    #-------------------------------------------------------------------------#
-    # Create bins from 1 to 5 with step size 0.5
-    max_num = 5
-    bin_size = 0.5
-    bins = np.arange(1, max_num + bin_size, bin_size)  # Include 9
-
-    # Get histogram data (frequencies and bin edges)
-    counts, bin_edges = np.histogram(mu_parietal, bins=bins)
-
-    # Store it
-    counts_by_subject[subject][hemi] = counts
-
-
-
-# plot the values
-#-------------------------------------------------------------------------#
-# Extract values
-# Convert each hemisphere's histogram to a list of arrays
-left_all = np.array([counts_by_subject[subj]['L'] for subj in dyscal_lists])
-right_all = np.array([counts_by_subject[subj]['R'] for subj in dyscal_lists])
-
-# Compute mean across subjects
-left_mean = np.mean(left_all, axis=0)
-right_mean = np.mean(right_all, axis=0)
-
-# Compute sem
-n_subjects = len(dyscal_lists)
-left_sem = np.std(left_all, axis=0, ddof=1) / np.sqrt(n_subjects)
-right_sem = np.std(right_all, axis=0, ddof=1) / np.sqrt(n_subjects)
-
-# Plot
-bin_centers = (bins[:-1] + bins[1:]) / 2
-
-# linear mixed effects model
-rows = []
-for subj in dyscal_lists:
-    for hemi in hemis:
-        values = counts_by_subject[subj][hemi]  # replace with whatever measure you're using
-        for i, val in enumerate(values):
-            rows.append({
-                'subject': subj,
-                'hemisphere': hemi,
-                'bin_center': bin_centers[i],
-                'value': val
-            })
-
-df = pd.DataFrame(rows)
-
-# Model: fixed effects for hemisphere and bin_center, random intercepts for subject
-pvals = []
-for hemi in hemis:
-    print(f"\n--- Hemisphere: {hemi} ---")
-    
-    df_hemi = df[df['hemisphere'] == hemi]
-    
-    # Fit LMM with random intercept per subject
-    model = smf.mixedlm("value ~ bin_center", df_hemi, groups=df_hemi["subject"])
-    result = model.fit()
-    
-    pvals.append(result.pvalues['bin_center'])
-    print(result.summary())
-
-
-# correlation coefficients
-r_left, p_left = pearsonr(bin_centers, left_mean)
-r_right, p_right = pearsonr(bin_centers, right_mean)
-
-# Fit linear (degree=1) and quadratic (degree=2) models for each hemisphere
-left_lin_fit = np.polyfit(bin_centers, left_mean, 1)
-left_quad_fit = np.polyfit(bin_centers, left_mean, 2)
-
-right_lin_fit = np.polyfit(bin_centers, right_mean, 1)
-right_quad_fit = np.polyfit(bin_centers, right_mean, 2)
-
-# Generate smooth predictions
-x_fit = np.linspace(bin_centers[0], bin_centers[-1], 200)
-left_lin_pred = np.polyval(left_lin_fit, x_fit)
-left_quad_pred = np.polyval(left_quad_fit, x_fit)
-
-right_lin_pred = np.polyval(right_lin_fit, x_fit)
-right_quad_pred = np.polyval(right_quad_fit, x_fit)
-
-
-
-
-
-
-plt.figure(figsize=(10, 6))
-
-plt.errorbar(bin_centers, left_mean, yerr=left_sem, label='hemi-L', fmt='o', capsize=2, color='red')
-plt.errorbar(bin_centers, right_mean, yerr=right_sem, label='hemi-R', fmt='o', capsize=2, color='firebrick')
-
-# Fit lines
-plt.plot(x_fit, left_lin_pred, '-', color='red', label=f'hemi-L, fit-linear (r = {r_left:.2f}, p < 0.001, n = {n_subjects})')
-# plt.plot(x_fit, left_quad_pred, '-', color='blue', label='hemi-L, fit-quadratic (R2)')
-plt.plot(x_fit, right_lin_pred, '-', color='firebrick', label=f'hemi-R, fit-linear (r = {r_right:.2f}, p < 0.001, n = {n_subjects})')
-# plt.plot(x_fit, right_quad_pred, '-', color='skyblue',label='hemi-R, fit-quadratic (R2)')
-
-plt.xlim(1,max_num)
-plt.ylim(0,1500)
-plt.xlabel('preferred numerosity')
-plt.ylabel('frequency of vertices')
-plt.legend()
-# plt.grid(True)
-plt.tight_layout()
-plt.savefig("figure.png", dpi=300, bbox_inches='tight')
-plt.show()
 
 
