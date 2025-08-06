@@ -66,7 +66,7 @@ python 6_ROIs.py
 
 ### 3. Statistics
 1. Open and run '7_count_vertex.py' for the linear-mixed effects model
-2. '7_count_vertex.py' also generates the figures [here](2025_EMPRISE2/figures/Sub-all)
+2. '7_count_vertex.py' also generates the figures [find here](https://github.com/KazukiMaruo/2025_EMPRISE2/tree/kazu/figures/Sub-all)
 3. Open and run '8_nonpara_test.py' for the Mann-Whitney U-Test
 
 
